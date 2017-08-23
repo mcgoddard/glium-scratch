@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = ["Mike Goddard <mikeygiom@gmail.com>"]
 
 [dependencies]
-glium = "*"
+glium = "0.17.0"
 tobj = "0.1.6"
 cgmath = "0.14.1"
 clock_ticks = "0.1.0"

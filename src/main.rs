@@ -96,7 +96,7 @@ fn main() {
             match event {
                 glutin::Event::WindowEvent { event, .. } => match event {
                     glutin::WindowEvent::Closed => closed = true,
-                    _ => ()
+                    ev => camera.process_input(&ev)
                 },
                 _ => (),
             }
