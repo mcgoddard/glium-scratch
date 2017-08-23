@@ -52,6 +52,9 @@ impl CameraState {
     }
 
     pub fn update(&mut self) {
+        self.direction.z += 0.001;
+        self.direction.x += 0.001;
+
         if self.moving_up {
             self.position.y += 0.01;
         }
@@ -100,7 +103,20 @@ impl CameraState {
             glutin::VirtualKeyCode::S => self.moving_backward = pressed,
             _ => (),
         };
+    }
 
+    pub fn update_direction(&mut self, diff_x: f64, diff_y: f64) {
+//        println!("Modifiying direction: {} {}", diff_x, diff_y);
+//        let modified = self.direction.z + (diff_x as f32);
+//        if modified < -1.0 {
+//            self.direction.z = 1.0;
+//        }
+//        else if modified > 1.0 {
+//            self.direction.z = -1.0;
+//        }
+//        else {
+//            self.direction.z = modified;
+//        }
     }
 }
 

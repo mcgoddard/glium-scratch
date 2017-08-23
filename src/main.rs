@@ -15,7 +15,7 @@ fn main() {
 
     let model_file = "/Users/mtg2/Projects/glium-scratch/bird.obj";
 
-    let (vertex_buffer, scale) = support::load_wavefront(&display, Path::new(&model_file));
+    let (mut vertex_buffer, mut scale) = support::load_wavefront(&display, Path::new(&model_file));
 
     let program = program!(&display,
         140 => {
@@ -96,7 +96,38 @@ fn main() {
             match event {
                 glutin::Event::WindowEvent { event, .. } => match event {
                     glutin::WindowEvent::Closed => closed = true,
-                    ev => camera.process_input(&ev)
+                    glutin::WindowEvent::MouseMoved { device_id: _, position } => {
+                        let diff_x = (mouse_pos.0 - position.0) * 0.001;
+                        let diff_y = (mouse_pos.1 - position.1) * 0.001;
+                        camera.update_direction(diff_x, diff_y);
+                        mouse_pos = (position.0, position.1);
+                    },
+                    glutin::WindowEvent::MouseInput { device_id: _, state, button } => {
+                        match button {
+                            glutin::MouseButton::Left => {
+                                mouse_pressed[0] = state == glutin::ElementState::Pressed;
+                            },
+                            glutin::MouseButton::Right => {
+                                mouse_pressed[1] = state == glutin::ElementState::Pressed;
+                            },
+                            glutin::MouseButton::Middle => {
+                                mouse_pressed[2] = state == glutin::ElementState::Pressed;
+                            },
+                            _ => return
+                        }
+                    },
+                    glutin::WindowEvent::DroppedFile(path) => {
+                        println!("Dropped file {}", path.display());
+                        match path.extension() {
+                            Some(ext) if ext == "obj" => {
+                                let load = support::load_wavefront(&display, path.as_path());
+                                vertex_buffer = load.0;
+                                scale = load.1;
+                            },
+                            _ => println!("Invalid file"),
+                        }
+                    },
+                    ev => camera.process_input(&ev),
                 },
                 _ => (),
             }
